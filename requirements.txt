@@ -1,0 +1,35 @@
+# Arabic Cybercrime RAG Chatbot - Dependencies
+
+# Core ML & NLP
+transformers>=4.35.0
+sentence-transformers>=2.2.2
+torch>=2.0.0
+
+# Vector Store & Retrieval
+faiss-cpu>=1.7.4
+rank-bm25>=0.2.2
+
+# Document Processing
+pdfplumber>=0.10.0
+PyPDF2>=3.0.0
+python-docx>=1.0.0
+openpyxl>=3.1.0
+
+# Arabic Text Processing
+arabic-reshaper>=3.0.0
+python-bidi>=0.4.2
+
+# PDF Report Generation
+reportlab>=4.0.0
+
+# Web Interface
+streamlit>=1.28.0
+
+# HTTP Client
+requests>=2.31.0
+
+# Utilities
+numpy>=1.24.0
+pandas>=2.0.0
+tqdm>=4.66.0
+python-dotenv>=1.0.0

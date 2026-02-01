@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شرح الكود: app.py - بالتفصيل الممل</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Fira+Code&display=swap');
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            text-align: right;
+            direction: rtl;
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .code-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid #e1e4e8;
+        }
+
+        .section-header {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .line-row {
+            display: flex;
+            border-bottom: 1px solid #eee;
+        }
+
+        .line-row:last-child {
+            border-bottom: none;
+        }
+
+        .line-number {
+            width: 60px;
+            background-color: #f6f8fa;
+            color: #6a737d;
+            padding: 10px;
+            text-align: center;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9em;
+            border-left: 1px solid #eee;
+            flex-shrink: 0;
+        }
+
+        .explanation {
+            padding: 10px 15px;
+            flex-grow: 1;
+            line-height: 1.6;
+        }
+
+        .code-snippet {
+            background-color: #2d3436;
+            color: #dfe6e9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85em;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        .keyword {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .important {
+            background-color: #fff3cd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>شرح تفصيلي لملف: <code>app.py</code> (سطراً بسطر)</h1>
+
+    <!-- 1. Imports Section -->
+    <div class="code-section">
+        <div class="section-header">1. الاستيرادات والإعدادات (Lines 1-19)</div>
+
+        <div class="line-row">
+            <div class="line-number">1-4</div>
+            <div class="explanation">
+                <strong>Docstring:</strong> وصف الملف. يوضح أن هذا الملف هو واجهة المستخدم الرئيسية المبنية بـ
+                Streamlit.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">6</div>
+            <div class="explanation">
+                <code>import streamlit as st</code>: استيراد مكتبة Streamlit، وهي الأداة الأساسية لبناء الواجهة. نستخدم
+                الاختصار <code>st</code> للوصول لجميع وظائفها.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">7-8</div>
+            <div class="explanation">
+                استيراد <code>pathlib</code> للتعامل مع مسارات الملفات بطريقة آمنة، و <code>sys</code> للتعامل مع
+                إعدادات النظام.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">11</div>
+            <div class="explanation">
+                <code>sys.path.insert(0, str(Path(__file__).parent))</code>: <br>
+                <span class="keyword">مهم جداً:</span> يضيف المجلد الحالي إلى مسارات بايثون. هذا يسمح باستيراد الملفات
+                الأخرى (مثل <code>config.py</code>) دون مشاكل "ModuleNotFound".
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">13-19</div>
+            <div class="explanation">
+                استيراد الثوابت والمتغيرات من ملف <code>config.py</code>. تشمل رابط LM Studio، المسارات، إعدادات تقسيم
+                النصوص (Chunks)، وأنواع الجرائم. هذا يضمن مركزية الإعدادات.
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Page Config & CSS -->
+    <div class="code-section">
+        <div class="section-header">2. إعداد الصفحة والتصميم (Lines 22-73)</div>
+
+        <div class="line-row">
+            <div class="line-number">22-27</div>
+            <div class="explanation">
+                <code>st.set_page_config(...)</code>: إعداد خصائص صفحة المتصفح.<br>
+                - <code>page_title</code>: العنوان الذي يظهر في تبويب المتصفح.<br>
+                - <code>layout="wide"</code>: يجعل المحتوى يأخذ كامل عرض الشاشة.<br>
+                - <code>initial_sidebar_state="expanded"</code>: يفتح الشريط الجانبي تلقائياً عند الدخول.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">30</div>
+            <div class="explanation">
+                <code>st.markdown(..., unsafe_allow_html=True)</code>: تسمح لنا بحقن كود CSS مخصص داخل الصفحة لتعديل
+                التصميم.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">32</div>
+            <div class="explanation">
+                استيراد خط "تجوال" (Tajawal) من Google Fonts ليكون الخط الرسمي للتطبيق.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">38-41</div>
+            <div class="explanation">
+                <code>.main { direction: rtl; ... }</code>: تحويل اتجاه المحتوى الرئيسي ليكون من اليمين لليسار (RTL)
+                لدعم اللغة العربية بشكل صحيح.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">57-60</div>
+            <div class="explanation">
+                تعريف كلاسات CSS (<code>.status-low</code>, <code>.status-high</code>...) لتلوين نصوص مستوى الخطورة
+                تلقائياً عند عرضها لاحقاً.
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. System Initialization -->
+    <div class="code-section">
+        <div class="section-header">3. دالة تهيئة النظام (Lines 76-140)</div>
+
+        <div class="line-row">
+            <div class="line-number">76</div>
+            <div class="explanation">
+                <code>@st.cache_resource</code>: <span class="keyword">Decorator هام للأداء</span>.<br>
+                يخبر Streamlit بتشغيل هذه الدالة <strong>مرة واحدة فقط</strong> عند بدء التطبيق، وحفظ النتيجة في
+                الذاكرة. بدونه، سيتم إعادة تحميل النماذج (التي تأخذ وقتاً طويلاً) مع كل ضغطة زر!
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">79-83</div>
+            <div class="explanation">
+                <strong>Lazy Imports:</strong> نضع الاستيرادات داخل الدالة وليس في بداية الملف.
+                السبب: تجنب تحميل المكتبات الثقيلة (مثل PyTorch/Transformers) إلا عند الحاجة الفعلية ولتسريع الإقلاع
+                الأولي للتطبيق.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">97-113</div>
+            <div class="explanation">
+                <span class="important">منطق Offline Mode:</span><br>
+                محاولة استيراد وتشغيل مكتبات RAG (البحث الدلالي). نستخدم <code>try...except</code>.
+                إذا فشل التحميل (بسبب عدم وجود الإنترنت أو الملفات)، لا ينهار التطبيق بل يطبع تحذيراً ويعمل بوضع
+                "المحادثة فقط".
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">115-120</div>
+            <div class="explanation">
+                إنشاء كائن <code>LMStudioClient</code> مع الإعدادات القادمة من config. وهو المسؤول عن الاتصال بالسيرفر
+                المحلي.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">123-128</div>
+            <div class="explanation">
+                تهيئة <code>CybercrimeAssistant</code> (عقل البوت) وتمرير الأدوات له (LLM, البحث، الموجه الرئيسي System
+                Prompt).
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">133-140</div>
+            <div class="explanation">
+                إرجاع جميع المكونات كـ قاموس (Dictionary) ليتم تخزينها واستخدامها في الدالة الرئيسية.
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Main Function - Setup & Sidebar -->
+    <div class="code-section">
+        <div class="section-header">4. الدالة الرئيسية والشريط الجانبي (Lines 143-257)</div>
+
+        <div class="line-row">
+            <div class="line-number">151-156</div>
+            <div class="explanation">
+                استدعاء <code>initialize_system()</code> داخل <code>try/catch</code>. إذا حدث خطأ كارثي هنا، يتوقف
+                التطبيق ويظهر رسالة خطأ واضحة للمستخدم.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">159</div>
+            <div class="explanation">
+                <code>with st.sidebar:</code>: كل ما يكتب تحته سيظهر في القائمة الجانبية بدلاً من وسط الصفحة.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">163-167</div>
+            <div class="explanation">
+                التحقق من حالة اتصال LM Studio باستخدام <code>components["llm"].is_available()</code> وعرض مؤشر حالة
+                (أخضر/أحمر).
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">175-190</div>
+            <div class="explanation">
+                <strong>عرض ملخص البلاغ:</strong> يستدعي <code>assistant.get_complaint_summary()</code> لجلب البيانات
+                التي استنتجها البوت حتى الآن (نوع الجريمة، الخطورة) ويعرضها للمستخدم في الشريط الجانبي لتكون أمامه
+                دائماً.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">198-202</div>
+            <div class="explanation">
+                <strong>زر "محادثة جديدة":</strong>
+                1. يستدعي <code>reset_conversation</code> في البوت.<br>
+                2. يحذف سجل الرسائل من <code>st.session_state</code>.<br>
+                3. يعمل <code>st.rerun()</code> لإعادة تحميل الصفحة وتنظيف الواجهة فوراً.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">227-231</div>
+            <div class="explanation">
+                <code>st.file_uploader</code>: أداة لرفع الملفات (PDF, DOCX). تسمح برفع ملفات متعددة.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">238-254</div>
+            <div class="explanation">
+                <strong>منطق إضافة المستندات:</strong><br>
+                1. يحفظ الملف المرفوع مؤقتاً.<br>
+                2. يقرأه باستخدام <code>doc_loader</code>.<br>
+                3. يقسمه لنصوص صغيرة (Chunks).<br>
+                4. يضيفه للفهرس (Index) باستخدام <code>hybrid.add_documents</code> للبحث فيه فوراً.
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Main Chat Interface -->
+    <div class="code-section">
+        <div class="section-header">5. واجهة المحادثة (Lines 259-308)</div>
+
+        <div class="line-row">
+            <div class="line-number">259-277</div>
+            <div class="explanation">
+                <strong>تهيئة السجل:</strong> إذا لم يكن هناك <code>messages</code> في الجلسة، قم بإنشاء قائمة فارغة
+                وأضف رسالة ترحيبية تشرح وظيفة البوت وقائمة الجرائم المدعومة.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">280-282</div>
+            <div class="explanation">
+                <strong>حلقة العرض:</strong> يدور على كل الرسائل المحفوظة ويعرضها باستخدام <code>st.chat_message</code>.
+                هذا يضمن بقاء المحادثة ظاهرة حتى بعد التحديث.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">285</div>
+            <div class="explanation">
+                <code>st.chat_input(...)</code>: يظهر صندوق إدخال النص في الأسفل. الكود بداخله لا ينفذ إلا عندما يضغط
+                المستخدم Enter.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">293-295</div>
+            <div class="explanation">
+                <code>with st.spinner...</code>: يظهر دائرة تحميل أثناء انتظار الرد.<br>
+                <code>assistant.chat(prompt)</code>: إرسال الرسالة للبوت والحصول على الرد.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">304</div>
+            <div class="explanation">
+                <code>st.session_state.messages.append(...)</code>: <span class="keyword">خطوة هامة</span>. حفظ رد البوت
+                في سجل الجلسة ليظهر عند إعادة تحميل الصفحة في المستقبل.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">307-308</div>
+            <div class="explanation">
+                <code>if __name__ == "__main__":</code>: نقطة الدخول للتطبيق، تستدعي الدالة <code>main()</code>.
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= config.py Explanation ================= -->
+    <h1 style="margin-top: 50px; border-color: #e74c3c;">شرح تفصيلي لملف: <code>config.py</code> (الإعدادات)</h1>
+    <p style="text-align: center; color: #7f8c8d;">هذا الملف هو "لوحة التحكم" المركزية. تغيير أي قيمة هنا ينعكس على كامل
+        النظام.</p>
+
+    <!-- 1. Paths -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #e74c3c;">1. المسارات والمجلدات (Lines 6-20)</div>
+
+        <div class="line-row">
+            <div class="line-number">6-7</div>
+            <div class="explanation">
+                استيراد <code>pathlib.Path</code>: الطريقة الحديثة في بايثون للتعامل مع المسارات، فهي تعمل بسلاسة على
+                Windows و Linux دون تغيير الكود.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">12</div>
+            <div class="explanation">
+                <code>BASE_DIR = Path(__file__).parent</code>: <span class="keyword">هام جداً</span>. يحدد المجلد
+                الرئيسي للمشروع ديناميكياً بناءً على موقع ملف <code>config.py</code>.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">13-15</div>
+            <div class="explanation">
+                تعريف مسارات المجلدات الفرعية:
+                <ul>
+                    <li><code>knowledge_base</code>: المجلد الذي نضع فيه ملفات PDF والبيانات الخام.</li>
+                    <li><code>reports</code>: المجلد الذي ستُحفظ فيه تقارير الـ PDF المولدة.</li>
+                    <li><code>vector_store</code>: المكان الذي يحفظ فيه FAISS فهرس البحث (قاعدة البيانات المتجهة).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">18-20</div>
+            <div class="explanation">
+                <code>.mkdir(exist_ok=True)</code>: أمر ذكي يقوم بإنشاء هذه المجلدات تلقائياً إذا لم تكن موجودة. لن
+                يحذفها أو يشتكي إذا كانت موجودة بالفعل.
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. LM Studio Settings -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #aaf;">2. إعدادات LM Studio والنماذج (Lines 23-42)</div>
+
+        <div class="line-row">
+            <div class="line-number">25-26</div>
+            <div class="explanation">
+                <code>LM_STUDIO_BASE_URL</code>: رابط السيرفر المحلي. المنفذ الافتراضي لـ LM Studio هو 1234.<br>
+                <code>LM_STUDIO_MODEL</code>: اسم النموذج الذي سيظهر في السجلات (Logs). تأكد من تحميل نفس النموذج في
+                واجهة LM Studio.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">29-31</div>
+            <div class="explanation">
+                <strong>Hyperparameters:</strong>
+                <ul>
+                    <li><code>TEMPERATURE = 0.2</code>: قيمة منخفضة لضمان الدقة والجدية. القيم العالية تجعل البوت
+                        "مبدعاً" وهو غير مطلوب في القضايا القانونية/الأمنية.</li>
+                    <li><code>MAX_TOKENS = 1024</code>: أقصى طول للإجابة.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">36-37</div>
+            <div class="explanation">
+                <code>EMBEDDING_MODEL</code>: النموذج المسؤول عن تحويل النصوص لأرقام. نستخدم
+                <code>aubmindlab/bert-base-arabertv2</code> لأنه الأقوى في فهم اللغة العربية.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">42</div>
+            <div class="explanation">
+                <code>RERANKER_MODEL</code>: نموذج المرحلة الثانية من البحث. يقوم بإعادة ترتيب أفضل 10 نتائج لضمان أن
+                النتيجة رقم 1 هي الأكثر دقة فعلاً.
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. RAG Settings -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #2ecc71;">3. إعدادات البحث RAG (Lines 45-56)</div>
+
+        <div class="line-row">
+            <div class="line-number">47-48</div>
+            <div class="explanation">
+                <span class="keyword">استراتيجية التقسيم (Chunking):</span><br>
+                <code>CHUNK_SIZE = 512</code>: حجم الفقرة الواحدة (بالحروف تقريباً).<br>
+                <code>CHUNK_OVERLAP = 50</code>: التداخل بين الفقرات لضمان عدم ضياع المعنى عند القص.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">49-50</div>
+            <div class="explanation">
+                <code>TOP_K_RETRIEVAL = 10</code>: نبحث مبدئياً عن أفضل 10 مستندات.<br>
+                <code>TOP_K_RERANK = 5</code>: بعد إعادة الترتيب، نرسل فقط أفضل 5 للـ LLM لتكوين الإجابة (توفيراً
+                للذاكرة والوقت).
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">55-56</div>
+            <div class="explanation">
+                إعدادات خوارزمية <strong>BM25</strong> (البحث بالكلمات المفتاحية). هذه القيم (k1=1.5, b=0.75) هي المعيار
+                العالمي ولاداعي لتغييرها عادة.
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. System Prompt -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #f1c40f; color: black;">4. تعليمات النظام (Lines 61-86)
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">61-86</div>
+            <div class="explanation">
+                <span class="important">دستور البوت (System Prompt):</span><br>
+                هذا النص يرسل مع <strong>كل رسالة</strong> ولكنه خفي عن المستخدم. يحدد:<br>
+                1. <strong>الشخصية</strong>: مساعد جرائم إلكترونية.<br>
+                2. <strong>المهمة</strong>: جمع معلومات محددة (نوع الجريمة، الوقت...).<br>
+                3. <strong>القيود</strong>: التحدث بالعربية الفصحى، عدم اختلاق معلومات.<br>
+                تعديل هذا النص يغير سلوك البوت جذرياً.
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Constants -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #9b59b6;">5. القواميس والثوابت (Lines 91-106)</div>
+
+        <div class="line-row">
+            <div class="line-number">91-98</div>
+            <div class="explanation">
+                <code>CRIME_TYPES</code>: قاموس يربط الكود البرمجي للجريمة (مثلاً <code>phishing</code>) بالاسم العربي
+                الذي يظهر في التقرير.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">101-106</div>
+            <div class="explanation">
+                <code>SEVERITY_LEVELS</code>: تعريف مستويات الخطورة وألوانها (أخضر، أصفر، أحمر). تستخدم هذه الألوان في
+                واجهة التطبيق (CSS) وفي ملف الـ PDF.
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= src/chatbot.py Explanation ================= -->
+    <h1 style="margin-top: 50px; border-color: #8e44ad;">شرح تفصيلي لملف: <code>src/chatbot.py</code> (مدير المحادثة)
+    </h1>
+    <p style="text-align: center; color: #7f8c8d;">هذا الملف هو "العقل المدبر" (Core Logic). يربط بين المستخدم، وقاعدة
+        البيانات، والذكاء الاصطناعي.</p>
+
+    <!-- 1. Class Initialization -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #8e44ad;">1. تهيئة الكلاس (Class Initialization) (Lines
+            16-50)</div>
+
+        <div class="line-row">
+            <div class="line-number">19-20</div>
+            <div class="explanation">
+                <code>__init__</code>: يستقبل المكونات الأساسية (LLM Client, Retriever, Reranker) ويحفظها كخصائص للكائن.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">36-37</div>
+            <div class="explanation">
+                <code>self.conversation_id</code>: إنشاء رقم تعريف فريد للجلسة باستخدام <code>uuid</code>.<br>
+                <code>self.messages</code>: قائمة لتخزين سجل المحادثة (History) لكي يتذكر البوت سياق الكلام.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">38-50</div>
+            <div class="explanation">
+                <code>self.complaint_data</code>: هيكل بيانات فارغ (Template) يتم تعبئته تدريجياً أثناء المحادثة. يحفظ
+                تفاصيل مثل نوع الجريمة، المنصة، والتاريخ، ليتم استخدامها لاحقاً في التقرير.
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Context Building (RAG) -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #e67e22;">2. بناء السياق RAG (Lines 76-97)</div>
+
+        <div class="line-row">
+            <div class="line-number">76</div>
+            <div class="explanation">
+                <code>_build_context(query)</code>: القلب النابض لعملية RAG. تأخذ سؤال المستخدم وتبحث عن إجابة في
+                المستندات.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">82</div>
+            <div class="explanation">
+                <code>self.retriever.search(query)</code>: البحث الأولي. نجلب ضعف العدد المطلوب (top_k * 2) لنعطي خيارات
+                أكثر لمرحلة إعادة الترتيب.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">85-86</div>
+            <div class="explanation">
+                <strong>Re-ranking:</strong> إذا كان الـ Reranker مفعلاً، نقوم بإعادة ترتيب النتائج بدقة عالية ونأخذ
+                أفضلها فقط. هذه الخطوة ترفع دقة الإجابة بشكل كبير.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">93-97</div>
+            <div class="explanation">
+                دمج النتائج النصية: نأخذ النصوص المسترجعة ونضعها في نص واحد (String) مع ذكر المصدر، ونفصل بينها بفواصل
+                واضحة، ليكون جاهزاً للإرسال للـ LLM.
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Chat Logic -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #27ae60;">3. منطق المحادثة الرئيسي (Lines 99-150)</div>
+
+        <div class="line-row">
+            <div class="line-number">110</div>
+            <div class="explanation">
+                <code>context = self._build_context(user_message)</code>: قبل الرد، نبحث أولاً عن معلومات ذات صلة.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">122</div>
+            <div class="explanation">
+                <code>llm_messages</code>: نبدأ تجهيز الرسائل للـ LLM. الرسالة الأولى دائماً هي
+                <code>System Prompt</code>.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">125-130</div>
+            <div class="explanation">
+                <strong>حقن السياق (Context Injection):</strong> إذا وجدنا معلومات من المستندات، نضيفها كرسالة "System"
+                إضافية تخبر البوت: "استخدم هذه المعلومات للإجابة".
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">132</div>
+            <div class="explanation">
+                <code>self.messages[-10:]</code>: نضيف آخر 10 رسائل من المحادثة لكي يفهم البوت تسلسل الكلام (Memory
+                Window).
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">148</div>
+            <div class="explanation">
+                <code>_extract_complaint_info(...)</code>: بعد الحصول على الرد، نقوم بتحليل النص لاستخراج المعلومات
+                المهمة (مثل نوع الجريمة) وتحديث ملف الشكوى "في الخلفية" دون أن يشعر المستخدم.
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Information Extraction -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #c0392b;">4. استخراج المعلومات وتحليل النصوص (Lines
+            152-197)</div>
+
+        <div class="line-row">
+            <div class="line-number">157-164</div>
+            <div class="explanation">
+                <code>crime_keywords</code>: قاموس كلمات مفتاحية بسيطة. مثلاً لو ذكر المستخدم "تهكير" أو "سرقة حساب"،
+                يصنف النظام الجريمة كـ <code>account_hack</code>.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">173-178</div>
+            <div class="explanation">
+                استخراج المنصة: يبحث عن كلمات مثل "فيسبوك"، "بنك"، "واتساب" لتحديد مكان وقوع الجريمة.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">180-196</div>
+            <div class="explanation">
+                <strong>تقييم الخطورة (Rule-based):</strong> منطق بسيط ولكنه فعال.
+                <ul>
+                    <li>كلمات "قتل"، "ابتزاز جنسي" -> خطورة <strong>حرجة</strong>.</li>
+                    <li>كلمات "سرقة مال" -> خطورة <strong>عالية</strong>.</li>
+                    <li>غير ذلك -> متوسطة.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Utilities -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #7f8c8d;">5. دوال مساعدة (Lines 198-234)</div>
+
+        <div class="line-row">
+            <div class="line-number">198-208</div>
+            <div class="explanation">
+                <code>get_complaint_summary</code>: يعيد ملخصاً سريعاً لعرضه في الشريط الجانبي (Sidebar) للتطبيق.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">217-233</div>
+            <div class="explanation">
+                <code>reset_conversation</code>: يمسح كل شيء ويبدأ جلسة جديدة برقم ID جديد، لكي لا تختلط شكاوى
+                المستخدمين ببعضها.
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= src/__init__.py Explanation ================= -->
+    <h1 style="margin-top: 50px; border-color: #34495e;">شرح تفصيلي لملف: <code>src/__init__.py</code> (الحزمة المصدرية)
+    </h1>
+    <p style="text-align: center; color: #7f8c8d;">هذا الملف يجمع شتات المشروع ويحوله إلى حزمة (Package) واحدة منظمة، مع
+        تحسين وقت الإقلاع باستخدام تقنية متقدمة.</p>
+
+    <!-- 1. Lazy Loading -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #34495e;">1. التحميل الكسول (Lazy Loading) (Lines 20-52)
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">20-52</div>
+            <div class="explanation">
+                <strong>المشكلة:</strong> لدينا ملفات كثيرة تستخدم مكتبات ضخمة (Torch, Transformers, ReportLab). لو
+                استوردناها كلها عند بدء التشغيل، سيتجمد البرنامج لعدة ثوانٍ.<br>
+                <strong>الحل (Lazy Loading):</strong> استخدمنا دالة <code>__getattr__</code>.<br>
+                هذه الدالة تعني: "لا تحمل أي ملف إلا عندما يطلب الكود استخدامه فعلياً".<br>
+                مثلاً: لن يتم تحميل <code>PDFReporter</code> ومكتباته إلا عندما يضغط المستخدم زر "تصدير PDF".
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Explicit Exports -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #95a5a6;">2. واجهة الحزمة (API Exports) (Lines 7-18)</div>
+
+        <div class="line-row">
+            <div class="line-number">7-18</div>
+            <div class="explanation">
+                <code>__all__</code>: قائمة تحدد ما الذي يمكن استيراده من هذه الحزمة. هذا يجعل الكود أنظف عند استخدامه
+                في <code>app.py</code>.<br>
+                بدلاً من القول:<br>
+                <code>from src.chatbot import CybercrimeAssistant</code><br>
+                يمكننا ببساطة القول:<br>
+                <code>from src import CybercrimeAssistant</code>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= src/reranker.py Explanation ================= -->
+    <h1 style="margin-top: 50px; border-color: #d35400;">شرح تفصيلي لملف: <code>src/reranker.py</code> (مدقق النتائج)
+    </h1>
+    <p style="text-align: center; color: #7f8c8d;">هذا الملف هو "المراقب" الذي يحسن جودة البحث. يحول النتائج من "جيدة"
+        إلى "ممتازة".</p>
+
+    <!-- 1. Initialization -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #d35400;">1. تحميل النموذج (Loading Model) (Lines 30-53)
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">38-43</div>
+            <div class="explanation">
+                <code>AutoModelForSequenceClassification</code>: نستخدم نموذج <code>BAAI/bge-reranker</code>.<br>
+                هذا النموذج ليس LLM عادياً يولد النصوص. وظيفته محددة: يستقبل جملتين (أ) و (ب) ويعطي رقماً بين 0 و 1 يمثل
+                مدى توافقهما.<br>
+                <code>self.model.eval()</code>: وضع النموذج في حالة التقييم (Evaluation Mode) لإيقاف حسابات التدريب
+                وتسريع العمل.
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Reranking Logic -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #e67e22;">2. منطق إعادة الترتيب (Lines 54-110)</div>
+
+        <div class="line-row">
+            <div class="line-number">79</div>
+            <div class="explanation">
+                <code>pairs = [[query, doc[0]]...</code>: نحضر البيانات على شكل أزواج: [سؤال المستخدم، نتيجة البحث 1]،
+                [سؤال المستخدم، نتيجة البحث 2]... وهكذا.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">82-88</div>
+            <div class="explanation">
+                <code>self.tokenizer(...)</code>: تحويل النصوص إلى أرقام (Tokens) يفهمها النموذج. نستخدم
+                <code>truncation=True</code> لضمان عدم تجاوز الحد المسموح (512 token).
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">92-96</div>
+            <div class="explanation">
+                <code>self.model(**inputs).logits</code>: النموذج يحسب "درجة الارتباط" لكل زوج.<br>
+                هذه الخطوة أدق بكثير من البحث المتجهي (Vector Search) العادي لأنها تنظر للكلمات في سياقها الدقيق لكل من
+                السؤال والإجابة "معاً" (Cross-Attention).
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">103</div>
+            <div class="explanation">
+                <code>reranked.sort(key=lambda x: x[1], reverse=True)</code>: نعيد ترتيب قائمة النتائج بناءً على الدرجات
+                الجديدة، بحيث تكون النتيجة الأقوى في البداية.
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Helper Method -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #95a5a6;">3. حساب درجة التطابق (Lines 111-124)</div>
+
+        <div class="line-row">
+            <div class="line-number">111</div>
+            <div class="explanation">
+                <code>compute_score</code>: دالة مساعدة تحسب درجة توافق نص واحد مع استعلام واحد. مفيدة للاختبارات
+                (Testing) والتحقق السريع.
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= src/embeddings.py Explanation ================= -->
+    <h1 style="margin-top: 50px; border-color: #2c3e50;">شرح تفصيلي لملف: <code>src/embeddings.py</code> (المتجهات)</h1>
+    <p style="text-align: center; color: #7f8c8d;">المسؤول عن تحويل "الكلام" إلى "أرقام" (Vectors) لتتمكن الآلة من فهم
+        المعنى والمقارنة بين الجمل.</p>
+
+    <!-- 1. Initialization & Offline Logic -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #2c3e50;">1. التهيئة والعمل بدون إنترنت (Lines 30-56)</div>
+
+        <div class="line-row">
+            <div class="line-number">39</div>
+            <div class="explanation">
+                <code>local_files_only=True</code>: هذه المعلمة <span class="keyword">حاسمة</span>.<br>
+                نجبر المكتبة على البحث عن النموذج داخل الجهاز فقط. إذا لم تجده، ننتقل للخطوة التالية. هذا يمنع البرنامج
+                من محاولة تحميل 500 ميجابايت فجأة أثناء تشغيل المستخدم للتطبيق.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">45</div>
+            <div class="explanation">
+                <code>raise RuntimeError(...)</code>: إذا فشل التحميل المحلي، نوقف التشغيل بخطأ واضح بدلاً من تعليق
+                البرنامج في محاولة اتصال فاشلة.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">47</div>
+            <div class="explanation">
+                <code>get_sentence_embedding_dimension()</code>: نستعلم النموذج عن حجم المتجه (عادة 768). هذا الرقم مهم
+                جداً لإنشاء قاعدة البيانات (`FAISS`) لاحقاً بنفس الحجم.
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Embedding Generation -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #3498db;">2. توليد المتجهات (Lines 57-95)</div>
+
+        <div class="line-row">
+            <div class="line-number">70</div>
+            <div class="explanation">
+                <code>embed_text</code>: تحويل نص واحد إلى مصفوفة (Array). يستخدم هذا عندما يكتب المستخدم سؤاله لنحوله
+                لمتجه ونبحث عن أشباهه.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">89-94</div>
+            <div class="explanation">
+                <code>embed_texts</code> (Batch Processing):<br>
+                عندما نضيف ملف PDF كامل، يكون لدينا مئات الفقرات. معالجة كل فقرة لوحدها بطيء جداً.<br>
+                لذلك نرسلها كـ "دفعة" (Batch) واحدة ليقوم المعالج (GPU/CPU) بحسابها دفعة واحدة، مما يسرع العملية 10
+                أضعاف.
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= src/llm_client.py Explanation ================= -->
+    <h1 style="margin-top: 50px; border-color: #e67e22;">شرح تفصيلي لملف: <code>src/llm_client.py</code> (المتحدث)</h1>
+    <p style="text-align: center; color: #7f8c8d;">هذا الملف هو "اللسان" الذي يتحدث مع سيرفر LM Studio. لا يوجد ذكاء
+        هنا، فقط بروتوكول اتصال.</p>
+
+    <!-- 1. Connection Setup -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #e67e22;">1. إعداد الاتصال (Lines 17-45)</div>
+
+        <div class="line-row">
+            <div class="line-number">30</div>
+            <div class="explanation">
+                <code>self.base_url</code>: نحفظ عنوان السيرفر (Localhost:1234).<br>
+                نقوم بإزالة العلامة <code>/</code> من النهاية لتجنب تكرارها لاحقاً عند دمج الروابط (URL Joining).
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">36-45</div>
+            <div class="explanation">
+                <code>is_available()</code>: دالة فحص سريعة (Ping).<br>
+                تحاول الاتصال بالسيرفر بمدة انتظار قصيرة (5 ثوانٍ). إذا رد السيرفر بـ 200 OK، نعلم أن النظام جاهز. مفيدة
+                جداً لإظهار العلامة الخضراء في واجهة التطبيق.
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Chat Method -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #d35400;">2. دالة المحادثة (Lines 47-91)</div>
+
+        <div class="line-row">
+            <div class="line-number">61-67</div>
+            <div class="explanation">
+                <code>payload</code>: تجهيز "الظرف" الذي سنرسله.<br>
+                يحتوي على: اسم النموذج، قائمة الرسائل السابقة (المحادثة)، ودرجة الحرارة (Temperature).
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">83-88</div>
+            <div class="explanation">
+                <strong>معالجة الأخطاء (Error Handling):</strong><br>
+                بدلاً من أن ينهار البرنامج ويغلق فجأة عند انقطاع الاتصال، نقوم بالتقاط الخطأ (ConnectionError) ونعيد
+                رسالة واضحة للمستخدم: "LM Studio غير متاح".
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Streaming Logic -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #c0392b;">3. البث التدفقي (Streaming) (Lines 93-126)</div>
+
+        <div class="line-row">
+            <div class="line-number">93</div>
+            <div class="explanation">
+                <code>_stream_chat</code>: دالة متقدمة تستخدم <code>yield</code>.<br>
+                بدلاً من انتظار الإجابة الكاملة (التي قد تستغرق 30 ثانية)، هذه الدالة تعيد كل كلمة فور توليدها (مثل
+                ChatGPT).
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">108-111</div>
+            <div class="explanation">
+                بروتوكول SSE (Server-Sent Events):<br>
+                البيانات تأتي على شكل أسطر تبدأ بـ <code>data: </code>.<br>
+                نحلل كل سطر JSON ونستخرج الكلمة الجديدة ونرسلها فوراً للواجهة.
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= src/pdf_reporter.py Explanation ================= -->
+    <h1 style="margin-top: 50px; border-color: #c0392b;">شرح تفصيلي لملف: <code>src/pdf_reporter.py</code> (صانع
+        التقارير)</h1>
+    <p style="text-align: center; color: #7f8c8d;">المسؤول عن تتويج العمل: تحويل المحادثة إلى وثيقة رسمية (PDF) يمكن
+        تقديمها للشرطة.</p>
+
+    <!-- 1. Arabic Text Handling -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #c0392b;">1. معالجة مشاكل اللغة العربية (Lines 45-56)</div>
+
+        <div class="line-row">
+            <div class="line-number">51-52</div>
+            <div class="explanation">
+                <strong>المشكلة:</strong> مكتبات الـ PDF القديمة تفهم الحروف العربية "مفصلة" (ك ل م ة) وتعرضها من اليسار
+                لليمين.<br>
+                <strong>الحل:</strong> الدالة <code>_reshape_arabic</code> تقوم بـ:<br>
+                1. <code>arabic_reshaper</code>: يوصل الحروف ببعضها (كلمة).<br>
+                2. <code>bidi.get_display</code>: يعكس اتجاه الجملة لتصبح من اليمين لليمين.
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. PDF Generation -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #e74c3c;">2. رسم ملف الـ PDF (Lines 57-197)</div>
+
+        <div class="line-row">
+            <div class="line-number">88-96</div>
+            <div class="explanation">
+                <code>registerFont</code>: تسجيل خط يدعم العربية (مثل Arial) وإلا ستظهر مربعات فارغة.<br>
+                الكود ذكي: يبحث عن الخط في نظام Windows، وإذا لم يجده يعود للخط الافتراضي (مع تحذير).
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">98-105</div>
+            <div class="explanation">
+                <code>SimpleDocTemplate</code>: نستخدم مكتبة ReportLab لبناء المستند احترافياً.<br>
+                نحدد الهوامش (Margins) وحجم الورقة (A4).
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">156-164</div>
+            <div class="explanation">
+                <strong>الجداول (Tables):</strong><br>
+                نستخدم الجداول لتنسيق البيانات (رقم البلاغ، النوع، التاريخ) بشكل أنيق مع تلوين الخلفية باللون الرمادي
+                الخفيف (lightgrey) وتحديد الحدود (GRID).
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">189</div>
+            <div class="explanation">
+                <code>msg["content"][:300]</code>: لا نضع كل المحادثة (التي قد تكون طويلة جداً). نأخذ مقتطفات منها أو
+                نحدد الطول لضمان أن التقرير مختصر ومفيد.
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= src/vector_store.py Explanation ================= -->
+    <h1 style="margin-top: 50px; border-color: #27ae60;">شرح تفصيلي لملف: <code>src/vector_store.py</code> (قاعدة
+        البيانات المتجهة)</h1>
+    <p style="text-align: center; color: #7f8c8d;">هذا الملف هو "خزانة الملفات" الذكية. يستخدم تقنية FAISS من Facebook
+        للبحث فائق السرعة.</p>
+
+    <!-- 1. Initialization -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #27ae60;">1. إعداد الفهرس (Lines 19-44)</div>
+
+        <div class="line-row">
+            <div class="line-number">38</div>
+            <div class="explanation">
+                <code>faiss.IndexFlatIP</code>: نختار نوع الفهرس "Inner Product".<br>
+                لماذا؟ لأنه أسرع طريقة لحساب التشابه الكوسيني (Cosine Similarity) عندما تكون المتجهات مطبعة
+                (Normalized).
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Adding Documents -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #16a085;">2. إضافة المستندات (Lines 51-78)</div>
+
+        <div class="line-row">
+            <div class="line-number">65</div>
+            <div class="explanation">
+                <code>_normalize_vectors</code> (Normalization):<br>
+                خطوة رياضية مهمة: توحيد طول جميع المتجهات ليساوي 1. هذا يجعل المقارنة بينهم عادلة ودقيقة ويعتمد فقط على
+                الزاوية (الاتجاه) وليس الطول.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">68</div>
+            <div class="explanation">
+                <code>self.index.add(normalized)</code>: إضافة الأرقام لقاعدة بيانات FAISS (في الذاكرة RAM). هذه العملية
+                سريعة جداً.
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Search Logic -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #f39c12;">3. منطق البحث (Lines 79-111)</div>
+
+        <div class="line-row">
+            <div class="line-number">95-97</div>
+            <div class="explanation">
+                كما فعلنا عند الإضافة، يجب أن نعالج "سؤال" المستخدم بنفس الطريقة (Normalization) قبل البحث، وإلا ستكون
+                النتائج عشوائية.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">100</div>
+            <div class="explanation">
+                <code>self.index.search(...)</code>: السحر الحقيقي.<br>
+                مكتبة FAISS مكتوبة بلغة C++ عالية الكفاءة. يمكنها البحث في مليون مستند خلال أجزاء من الثانية
+                (Milliseconds).
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Persistence -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #8e44ad;">4. الحفظ والاسترجاع (Lines 113-164)</div>
+
+        <div class="line-row">
+            <div class="line-number">126-130</div>
+            <div class="explanation">
+                لأن FAISS يعمل في الذاكرة (RAM)، كل شيء يضيع عند إغلاق البرنامج.<br>
+                لذلك نستخدم <code>write_index</code> لحفظ الفهرس في ملف <code>.faiss</code>، و نستخدم
+                <code>pickle</code> لحفظ النصوص الأصلية في ملف منفصل.
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= src/bm25_retriever.py Explanation ================= -->
+    <h1 style="margin-top: 50px; border-color: #f39c12;">شرح تفصيلي لملف: <code>src/bm25_retriever.py</code> (البحث
+        بالكلمات)</h1>
+    <p style="text-align: center; color: #7f8c8d;">هذا الملف هو "الباحث التقليدي". يبحث عن الكلمات بالضبط كما هي (مثل
+        Google القديم)، وهو مكمل ممتاز للبحث بالمعنى (Semantic Search).</p>
+
+    <!-- 1. Initialization -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #f39c12;">1. الخوارزمية (The Algorithm) (Lines 15-28)</div>
+
+        <div class="line-row">
+            <div class="line-number">21-22</div>
+            <div class="explanation">
+                <code>k1</code> و <code>b</code>: هذه ليست حروفاً عشوائية، بل ثوابت رياضية دقيقة لخوارزمية BM25.<br>
+                <ul>
+                    <li><code>k1</code>: يتحكم في مدى أهمية "تكرار الكلمة". كلما زاد، زادت أهمية التكرار.</li>
+                    <li><code>b</code>: يتحكم في "طول المستند". هل المستند الطويل جداً يجب أن يعاقب؟ (عادة نعم).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Tokenization -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #d35400;">2. تقسيم النصوص (Tokenization) (Lines 33-42)
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">35</div>
+            <div class="explanation">
+                <code>if self.arabic_processor</code>: نقطة قوة النظام.<br>
+                لا نقسم الكلمات عشوائياً. نستخدم معالجنا العربي (الذي يشيل التشكيل ويوحد الألف والهمزات) لضمان أن بحث
+                المستخدم عن "أحمد" يجد "احمد" و "أَحْمَد".
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Building Index -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #c0392b;">3. بناء الفهرس (Lines 43-73)</div>
+
+        <div class="line-row">
+            <div class="line-number">53</div>
+            <div class="explanation">
+                <code>from rank_bm25 import BM25Okapi</code>: نستخدم تطبيقاً سريعاً وموثوقاً للخوارزمية.<br>
+                "Okapi" هو اسم النسخة الأكثر شهرة واستقراراً من BM25.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">70</div>
+            <div class="explanation">
+                <code>self.bm25 = BM25Okapi(...)</code>: في هذه اللحظة يتم حساب إحصائيات كل كلمة في كل مستند (TF-IDF)
+                وتخزينها في الذاكرة لتكون جاهزة للبحث السريع.
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Search Implementation -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #2c3e50;">4. تنفيذ البحث (Lines 74-109)</div>
+
+        <div class="line-row">
+            <div class="line-number">90</div>
+            <div class="explanation">
+                <code>query_tokens = self._tokenize(query)</code>: يجب أن نعالج سؤال المستخدم <strong>بنفس الطريقة
+                    بالضبط</strong> (حذف تشكيل، توحيد همزات) التي عالجنا بها المستندات، وإلا لن نجد تطابقاً.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">93</div>
+            <div class="explanation">
+                <code>get_scores</code>: تعيد قائمة أرقام، رقم لكل مستند يمثل "قوة العلاقة".<br>
+                إذا كان الرقم 0، فهذا يعني أن الكلمات التي بحث عنها المستخدم غير موجودة نهائياً في المستند.
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= src/document_loader.py Explanation ================= -->
+    <h1 style="margin-top: 50px; border-color: #795548;">شرح تفصيلي لملف: <code>src/document_loader.py</code> (قارئ
+        المستندات)</h1>
+    <p style="text-align: center; color: #7f8c8d;">هذا الملف هو "العين" التي تقرأ الملفات. يدعم: PDF, DOCX, TXT, CSV,
+        XLSX.</p>
+
+    <!-- 1. PDF Handling -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #795548;">1. قراءة الـ PDF الذكية (Lines 30-78)</div>
+
+        <div class="line-row">
+            <div class="line-number">43-56</div>
+            <div class="explanation">
+                <strong>الخطة أ (pdfplumber):</strong><br>
+                نبدأ بمحاولة استخدام مكتبة <code>pdfplumber</code> لأنها الأفضل في استخراج النصوص العربية والحفاظ على
+                ترتيبها.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">61-71</div>
+            <div class="explanation">
+                <strong>الخطة ب (Fallback - PyPDF2):</strong><br>
+                إذا فشلت المكتبة الأولى (مثلاً غير مثبتة)، لا يتوقف البرنامج. ينتقل فوراً للخطة البديلة ويستخدم مكتبة
+                <code>PyPDF2</code> المخففة. هذا يضمن عمل البرنامج في مختلف البيئات.
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Text Files & Encodings -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #5d4037;">2. مشاكل الترميز (Lines 100-124)</div>
+
+        <div class="line-row">
+            <div class="line-number">110</div>
+            <div class="explanation">
+                <code>encodings = ['utf-8', ... 'cp1256']</code>:<br>
+                الملفات النصية في ويندوز العربية غالباً ما تكون بترميز <code>cp1256</code> وليس <code>utf-8</code>.<br>
+                الكود يجرب 4 ترميزات مختلفة حتى ينجح في القراءة، مما يحل مشكلة "الرموز الغريبة" التي تظهر عادة.
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Unified Interface -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #8d6e63;">3. الواجهة الموحدة (Lines 165-206)</div>
+
+        <div class="line-row">
+            <div class="line-number">183-191</div>
+            <div class="explanation">
+                <code>loaders = { ... }</code>: نمط التصميم (Strategy Pattern).<br>
+                نختار دالة التحميل المناسبة بناءً على امتداد الملف. هذا يجعل إضافة دعم لملفات جديدة (مثلاً PPTX) سهلاً
+                جداً مستقبلاً.
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= src/arabic_processor.py Explanation ================= -->
+    <h1 style="margin-top: 50px; border-color: #1abc9c;">شرح تفصيلي لملف: <code>src/arabic_processor.py</code> (المعالج
+        اللغوي)</h1>
+    <p style="text-align: center; color: #7f8c8d;">هذا الملف هو "مهندس اللغة". وظيفته فهم اللغة العربية ومشاكلها
+        المعقدة.</p>
+
+    <!-- 1. Normalization -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #1abc9c;">1. توحيد النصوص (Normalization) (Lines 43-110)
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">43-54</div>
+            <div class="explanation">
+                <strong>توحيد الحروف:</strong><br>
+                اللغة العربية مليئة بالأشكال المختلفة لنفس الحرف.<br>
+                الكود يحول (أ، إ، آ) إلى (ا) ويحول (ى) إلى (ي).<br>
+                بدون هذه الخطوة، البحث عن "إيمان" لن يجد نتائج عن "ايمان".
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">55-62</div>
+            <div class="explanation">
+                <strong>التنظيف:</strong><br>
+                إزالة التشكيل (الضمة، الفتحة...) وإزالة "التطويل" (ـــــــــ) الذي يستخدمه الناس لتزيين الكلام، لأنه
+                يربك محركات البحث.
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Tokenization & Chunking -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #16a085;">2. التقسيم والتقطيع (Lines 112-174)</div>
+
+        <div class="line-row">
+            <div class="line-number">126</div>
+            <div class="explanation">
+                <code>re.split(...)</code>: تقسيم الجمل إلى كلمات (Tokens) بناءً على المسافات وعلامات الترقيم.<br>
+                هذه القائمة (قائمة الكلمات) هي التي تغذي خوارزمية BM25 لاحقاً.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">151-166</div>
+            <div class="explanation">
+                <strong>التقطيع الذكي (Chunking):</strong><br>
+                عندما نقسم نصاً طويلاً لندخله في الذاكرة، لا نقطعه عشوائياً في منتصف الكلمة.<br>
+                الكود يحاول العثور على "أقرب نقطة نهاية جملة" أو "مسافة" ليقطع عندها، لضمان أن المعنى لا يضيع.
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= src/hybrid_retriever.py Explanation ================= -->
+    <h1 style="margin-top: 50px; border-color: #8e44ad;">شرح تفصيلي لملف: <code>src/hybrid_retriever.py</code> (البحث
+        الهجين)</h1>
+    <p style="text-align: center; color: #7f8c8d;">أذكى ملف في المشروع. يجمع بين "دقة المعنى" و "دقة الكلمات" ليخرج
+        بأفضل نتيجة ممكنة.</p>
+
+    <!-- 1. Hybrid Initialization -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #8e44ad;">1. المزج بين العالمين (Lines 16-38)</div>
+
+        <div class="line-row">
+            <div class="line-number">17</div>
+            <div class="explanation">
+                <code>dense_weight=0.6, sparse_weight=0.4</code>:<br>
+                هنا نحدد "الوصفة السحرية". نعطي 60% أهمية للبحث بالمعنى (FAISS) و 40% للبحث بالكلمات (BM25).<br>
+                لماذا؟ لأن فهم المعنى غالباً أهم، لكن أحياناً يكون اسم المستخدم أو رقم نادراً مهماً جداً.
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Dual Search Strategy -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #9b59b6;">2. استراتيجية البحث المزدوج (Lines 39-63)</div>
+
+        <div class="line-row">
+            <div class="line-number">51-55</div>
+            <div class="explanation">
+                نطلق بحثين بشكل متوازي:<br>
+                1. <strong>البحث المتجهي (Dense):</strong> يفهم "سرقت فلوسي" تشبه "احتيال مالي".<br>
+                2. <strong>بحث الكلمات (Sparse):</strong> يبحث عن كلمة "سرقت" و "فلوسي" حرفياً.<br>
+                نطلب <code>top_k * 2</code> (ضعف العدد المطلوب) من كل واحد لنزيد فرصة العثور على الجواب الصحيح قبل
+                التصفية.
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Result Merging & Normalization -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #2c3e50;">3. دمج وتوحيد الدرجات (Lines 65-116)</div>
+
+        <div class="line-row">
+            <div class="line-number">86 + 97</div>
+            <div class="explanation">
+                <strong>مشكلة رياضية:</strong> FAISS يعطي درجات بين 0 و 1، لكن BM25 قد يعطي درجات مثل 15 أو 30.<br>
+                <strong>الحل (Normalization):</strong> نقسم نتائج كل نظام على "أعلى درجة حققها" ليصبح كلاهما بين 0 و
+                1.<br>
+                <code>score / max_score</code><br>
+                بدون هذه الخطوة، سيسيطر BM25 على النتائج دائماً لأن أرقامه أكبر.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">110-113</div>
+            <div class="explanation">
+                <strong>المعادلة النهائية:</strong><br>
+                <code>الدرجة = (0.6 × درجة المعنى) + (0.4 × درجة الكلمة)</code><br>
+                هذه المعادلة تضمن أن النتيجة التي تظهر في الأعلى هي التي ترضي الطرفين!
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Unified Indexing -->
+    <div class="code-section">
+        <div class="section-header" style="background-color: #34495e;">4. الإضافة الموحدة (Lines 118-136)</div>
+
+        <div class="line-row">
+            <div class="line-number">118</div>
+            <div class="explanation">
+                عندما نضيف مستنداً جديداً، يجب إضافته <strong>لكلا النظامين</strong> في نفس اللحظة.<br>
+                إذا أضفناه لأحدهما ونسينا الآخر، سيصبح النظام "أعور" يرى نصف الحقيقة فقط.
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= __pycache__ Explanation ================= -->
+    <h1 style="margin-top: 50px; border-color: #95a5a6;">شرح مجلدات: <code>__pycache__</code> (ذاكرة بايثون المؤقتة)
+    </h1>
+    <p style="text-align: center; color: #7f8c8d;">هذه المجلدات تظهر تلقائياً ولا داعي للقلق منها. هي "محرك" بايثون
+        الخفي.</p>
+
+    <div class="code-section">
+        <div class="section-header" style="background-color: #95a5a6;">1. ما هي هذه المجلدات؟</div>
+
+        <div class="line-row">
+            <div class="line-number">Info</div>
+            <div class="explanation">
+                <strong>المترجم (Compiler):</strong><br>
+                عندما تشغل برنامج بايثون، الكمبيوتر لا يفهم الملفات النصية (<code>.py</code>) مباشرة.<br>
+                يقوم بايثون بـ "ترجمة" هذه الملفات إلى لغة وسيطة تسمى <strong>Bytecode</strong> يفهمها المعالج
+                بسرعة.<br>
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">Cache</div>
+            <div class="explanation">
+                <strong>لماذا يتم حفظها؟</strong><br>
+                عملية الترجمة تأخذ وقتاً (أجزاء من الثانية).<br>
+                لكي لا يكرر بايثون هذه العملية في كل مرة تشغل فيها البرنامج، يحفظ النسخة المترجمة داخل
+                <code>__pycache__</code> (بلاحقة <code>.pyc</code>).<br>
+                في المرة القادمة، إذا لم يتغير الكود الأصلي، سيشغل النسخة الجاهزة فوراً، مما يجعل البرنامج يقلع أسرع.
+            </div>
+        </div>
+
+        <div class="line-row">
+            <div class="line-number">Safe?</div>
+            <div class="explanation">
+                <strong>هل يمكن حذفها؟</strong><br>
+                نعم، آمن تماماً. إذا حذفتها، سيقوم بايثون بإنشائها مرة أخرى تلقائياً عند التشغيل القادم.<br>
+                عادة نطلب من نظام <code>git</code> تجاهلها (via <code>.gitignore</code>) لأنها ملفات مؤقتة خاصة بجهازك
+                فقط.
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,269 @@
+Model Name
+
+Arabic Cybercrime Complaints RAG Chatbot
+
+2. Objective
+
+Develop an Arabic-first RAG chatbot specialized in receiving cybercrime complaints through a normal conversational chat interface, collecting incident details, assessing severity, and providing safe, accurate guidance.
+
+The system stores structured complaint reports for administrators as PDF documents, while end-users interact only via natural Arabic chat (no JSON exposure).
+
+3. Primary Use Cases
+
+اختراق حسابات (بريد، منصات اجتماعية)
+
+احتيال مالي إلكتروني
+
+رسائل تصيد (Phishing)
+
+انتحال الهوية
+
+ابتزاز وتهديد إلكتروني
+
+تسريب بيانات أو وصول غير مصرح به
+
+4. Target Users
+
+مراكز خدمة العملاء
+
+فرق الأمن السيبراني
+
+جهات قانونية واستشارية
+
+مؤسسات تستقبل بلاغات رقمية
+
+5. System Architecture (High-Level)
+
+Multi-Stage RAG Pipeline
+
+Arabic Preprocessing
+
+Hybrid Retrieval
+
+Multilingual Re-ranking
+
+Controlled Generation
+
+Post-processing & PDF Reporting
+
+6. Models Stack
+6.1 LLM (Generation) – ⚠ Updated
+
+Model: gemma-3n-E4B-it-text-GGUF
+
+Runtime: LM Studio / lmstduo
+
+Parameters:
+
+temperature: 0.2
+
+max_tokens: 512–1024
+
+context_window: 2048
+
+Execution:
+
+CPU-only (optimized for local machines)
+
+GGUF format for memory efficiency
+
+Rationale
+
+Lightweight and fast on Windows 11
+
+Stable instruction-following
+
+Suitable for RAG-based grounded answers
+
+Works efficiently on Core i7 Gen11 + 32GB RAM
+
+6.2 Embeddings
+
+Primary: UBC-NLP/AraBERTv2
+
+Alternative: aubmindlab/bert-base-arabertv2
+
+6.3 Vector Store
+
+FAISS – IndexFlatIP (Cosine Similarity)
+
+6.4 Sparse Retrieval
+
+BM25 (rank-bm25)
+
+6.5 Re-ranking 
+
+Problem
+English-focused re-rankers underperform with Arabic legal terminology.
+
+Solution
+
+BAAI/bge-reranker-v2-m3
+
+Multilingual with strong Arabic support
+
+High accuracy for legal & cybersecurity content
+
+Efficient on CPU
+
+Recommended for Arabic RAG systems
+
+7. Knowledge Base
+
+أدلة الاستجابة للجرائم الإلكترونية
+
+إرشادات قانونية عامة
+
+سياسات أمن معلومات
+
+محتوى توعوي وتثقيفي
+
+Supported formats:
+
+PDF
+
+DOCX
+
+TXT
+
+CSV
+
+XLSX
+
+8. Arabic Text Processing (Mandatory)
+8.1 Query & Document Preprocessing
+
+Arabic normalization must be applied before embedding and retrieval.
+
+Steps
+
+توحيد الألفات (أ / إ / آ → ا)
+
+توحيد الياء (ى → ي)
+
+إزالة التشكيل غير الضروري
+
+إزالة المدود والرموز الزائدة
+
+Purpose
+Ensure semantic consistency so that:
+
+"إختراق"
+
+"اختراق"
+
+"اختراقُ"
+
+are treated identically during retrieval.
+
+9. Document Processing (Arabic PDF Handling)
+Challenge
+
+Arabic PDFs often contain:
+
+Broken characters
+
+Incorrect RTL order
+
+Fragmented words
+
+Recommended Solution
+
+Do NOT rely on PyPDF2 alone.
+
+Preferred Stack
+
+pdfplumber → primary extractor (RTL-aware)
+
+Marker → complex or scanned PDFs (optional)
+
+PyPDF2 → fallback only
+
+Rules
+
+Preserve right-to-left reading order
+
+Validate extracted text
+
+Apply Arabic normalization before embedding
+
+10. Prompt Behavior Rules
+
+Arabic-only responses (Modern Standard Arabic)
+
+Conversational chat style
+
+Context-grounded answers only
+
+No hallucinations
+
+No cybercrime facilitation
+
+Victim-supportive tone
+
+Clear refusal + redirection for illegal requests
+
+11. Output Handling 
+End User
+
+Normal Arabic chat
+
+Clear advice and steps
+
+No structured data shown
+
+Admin / Supervisor
+
+Each complaint saved as a PDF report
+
+PDF includes:
+
+Complaint summary
+
+Severity level
+
+Recommended actions
+
+Evidence checklist
+
+Confidence score
+
+Timestamp & reference ID
+
+12. Deployment Environment
+
+OS: Windows 11
+
+CPU: Intel Core i7 Gen 11
+
+RAM: 32 GB
+
+Python: 3.10+
+
+LLM Runtime: LM Studio (GGUF)
+
+13. Safety & Compliance
+
+No instructions enabling cybercrime
+
+No malware execution or analysis
+
+Data privacy & minimization
+
+Encrypted storage
+
+Mandatory human escalation for high-risk cases
+
+14. Value Proposition
+
+Arabic-native cybersecurity assistant
+
+Lightweight local deployment
+
+Legal-aware semantic retrieval
+
+PDF-based audit-ready reports
+
+Reduced human workload
+
+Production-ready RAG design
